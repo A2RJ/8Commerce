@@ -1,9 +1,9 @@
 {
-  "development": {
-    "username": "postgres",
-    "password": "root",
-    "database": "8commerce",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
-  }
+    "development": {
+        "username": "postgres",
+        "password": "postgres",
+        "database": "8commerce",
+        "host": "127.0.0.1",
+        "dialect": "postgres"
+    }
 }
