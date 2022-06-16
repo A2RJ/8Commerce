@@ -23,6 +23,15 @@ module.exports = (sequelize, DataTypes) => {
             });
             // Product.belongsTo(models.Order);
         }
+
+        get price() {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+    
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(this.price);
+        }
     }
     Product.init(
         {
