@@ -16,8 +16,7 @@ class ProductController {
 
     Product.findAll(params)
       .then((products) => {
-        // res.render("/products/index");
-        res.send(products);
+        res.render("products/index", { products });
       })
       .catch((err) => {
         res.send(err);
