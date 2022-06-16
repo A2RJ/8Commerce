@@ -1,7 +1,6 @@
 const orderRoutes = require("express").Router();
 const OrderController = require("../controllers/OrderController");
 
-// GET /orders
 orderRoutes.get("/", OrderController.index);
 orderRoutes.get("/:UserId/user", OrderController.userOrders);
 orderRoutes.get("/:UserId/seller", OrderController.sellerOrders);

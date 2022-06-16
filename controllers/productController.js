@@ -2,9 +2,19 @@ const { Product, Category, Store } = require("../models");
 
 class ProductController {
   static index(req, res) {
-    Product.findAll({
+    let params = {
       include: [Category, Store],
-    })
+    };
+
+    if (req.query.name) {
+      params.where = {
+        name: {
+          [Op.iLike]: `%${req.query.name}%`,
+        },
+      };
+    }
+
+    Product.findAll(params)
       .then((products) => {
         // res.render("/products/index");
         res.send(products);
