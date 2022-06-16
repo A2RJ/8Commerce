@@ -7,7 +7,7 @@ const port = 3000;
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-
+app.engine('ejs', require('express-ejs-extend'));
 app.set("view engine", "ejs");
 
 app.use("/", MainRoutes);
