@@ -1,4 +1,13 @@
-const router = require("express").Router();
+const orderRoutes = require("express").Router();
 const OrderController = require("../controllers/OrderController");
 
-module.exports = router;
+// GET /orders
+orderRoutes.get("/", OrderController.index);
+orderRoutes.get("/:UserId/user", OrderController.userOrders);
+orderRoutes.get("/:UserId/seller", OrderController.sellerOrders);
+orderRoutes.get("/:Id/order", OrderController.order);
+orderRoutes.get("/:OrderId/cancel", OrderController.cancel);
+orderRoutes.get("/:OrderId/delivery", OrderController.delivery);
+orderRoutes.get("/:OrderId/complete", OrderController.complete);
+
+module.exports = orderRoutes;

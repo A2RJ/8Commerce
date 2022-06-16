@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
             Product.belongsTo(models.Store, {
                 onDelete: "CASCADE",
             });
-            Product.belongsTo(models.Order);
+            // Product.belongsTo(models.Order);
         }
     }
     Product.init(
