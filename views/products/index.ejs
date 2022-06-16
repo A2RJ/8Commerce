@@ -8,6 +8,8 @@
             <a href="/products/<%= store.id %>/create">
                 <button class="btn btn-primary">Create</button>
             </a>
+            <a href="/orders/<%= store.UserId %>/user"> Keranjang</a>
+            <a href="/orders/<%= store.UserId %>/seller"> List Orderan</a>
         </div>
         <div class="col-md-12 mt-2">
             <form action="/products/<%= store.id %>/store" method="get">
@@ -39,6 +41,7 @@
                 <td>
                     <a href="/products/<%= product.id %>/edit" class="btn btn-primary">Edit</a>
                     <a href="/products/<%= product.id %>/delete" class="btn btn-danger">Delete</a>
+                    <a href="/orders/<%= product.id %>/2/order" class="btn btn-info">Order</a>
                 </td>
             </tr>
             <% }) %>

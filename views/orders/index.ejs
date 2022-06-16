@@ -1,0 +1,61 @@
+<% extend('../layout/index.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <% if (isSeller) { %>
+            <h1>Orders List</h1>
+            <% } else { %>
+            <h1>Keranjang</h1>
+            <% } %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Di Order</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach((order, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= order.Product.name %></td>
+                        <td><%= order.Product.price %></td>
+                        <td><%= order.status %></td>
+                        <td><%= order.createdAtFormatted %></td>
+                        <td>
+                            <% if (isSeller) { %>
+
+                            <% if (order.status === 'On Process') { %>
+                            <a href="/orders/<%= order.id %>/delivery" class="btn btn-danger">Delivery</a>
+                            <% } else { %>
+                            <p><%= order.status %></p>
+                            <% } %>
+
+                            <% } else { %>
+
+                            <% if (order.status === 'On Process') { %>
+                            <a href="/orders/<%= order.id %>/cancel" class="btn btn-danger">Cancel</a>
+                            <% } else if (order.status === 'Delivery') { %>
+                            <a href="/orders/<%= order.id %>/complete" class="btn btn-primary">Complete</a>
+                            <% } else { %>
+                            <p><%= order.status %></p>
+                            <% } %>
+
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

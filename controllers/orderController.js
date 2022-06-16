@@ -7,7 +7,7 @@ class OrderController {
       include: [User, Product],
     })
       .then((orders) => {
-        res.send(orders);
+        res.render("orders/index", { orders, isSeller: false });
       })
       .catch((err) => {
         res.send(err);
@@ -22,7 +22,7 @@ class OrderController {
       include: [User, Product],
     })
       .then((orders) => {
-        res.send(orders);
+        res.render("orders/index", { orders, isSeller: false });
       })
       .catch((err) => {
         res.send(err);
@@ -47,7 +47,7 @@ class OrderController {
         });
       })
       .then((orders) => {
-        res.send(orders);
+        res.render("orders/index", { orders, isSeller: true });
       })
       .catch((err) => {
         res.send(err);
@@ -60,7 +60,7 @@ class OrderController {
       ProductId: req.params.ProductId,
     })
       .then((order) => {
-        res.send(order);
+        res.redirect(`/orders/${req.params.UserId}/user`);
       })
       .catch((err) => {
         res.send(err);
@@ -70,7 +70,7 @@ class OrderController {
   static cancel(req, res) {
     Order.updateStatus(req.params.OrderId, "Cancelled")
       .then((order) => {
-        res.send(order);
+        res.redirect(`/orders/${req.params.UserId}/user`);
       })
       .catch((err) => {
         res.send(err);
@@ -78,9 +78,9 @@ class OrderController {
   }
 
   static delivery(req, res) {
-    Order.updateStatus(req.params.OrderId, "Delivered")
+    Order.updateStatus(req.params.OrderId, "Delivery")
       .then((order) => {
-        res.send(order);
+        res.redirect(`/orders/${req.params.UserId}/seller`);
       })
       .catch((err) => {
         res.send(err);
@@ -90,7 +90,7 @@ class OrderController {
   static complete(req, res) {
     Order.updateStatus(req.params.OrderId, "Completed")
       .then((order) => {
-        res.send(order);
+        res.redirect(`/orders/${req.params.UserId}/user`);
       })
       .catch((err) => {
         res.send(err);

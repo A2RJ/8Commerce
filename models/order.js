@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     static updateStatus(id, status) {
       return Order.update({ status: status }, { where: { id: id } });
     }
+
+    get createdAtFormatted() {
+      return this.createdAt.toLocaleString();
+    }
   }
   Order.init(
     {
