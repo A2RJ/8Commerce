@@ -3,7 +3,20 @@
 <div class="container">
     <div class="row mt-5 mb-2">
         <div class="col-md-12">
-            <h1>Products</h1>
+            <h1>Store name: <%= store.name %></h1>
+            <p>Products</p>
+            <a href="/products/<%= store.id %>/create">
+                <button class="btn btn-primary">Create</button>
+            </a>
+        </div>
+        <div class="col-md-12 mt-2">
+            <form action="/products/<%= store.id %>/store" method="get">
+                <input type="text" class="form-control" id="search" name="search" placeholder="Search">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="/products/<%= store.id %>/create">
+                    <button class="btn btn-primary">Cancel</button>
+                </a>
+            </form>
         </div>
     </div>
     <table class="table">

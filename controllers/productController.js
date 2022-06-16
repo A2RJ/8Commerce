@@ -1,22 +1,34 @@
 const { Product, Category, Store } = require("../models");
+const { Op } = require("sequelize");
 
 class ProductController {
   static index(req, res) {
     let params = {
-      include: [Category, Store],
+      where: {
+        StoreId: req.params.StoreId,
+      },
     };
 
-    if (req.query.name) {
+    if (req.query.search) {
       params.where = {
         name: {
-          [Op.iLike]: `%${req.query.name}%`,
+          [Op.iLike]: `%${req.query.search}%`,
         },
       };
     }
 
+    let products = [];
+
     Product.findAll(params)
-      .then((products) => {
-        res.render("products/index", { products });
+      .then((productsList) => {
+        products = productsList;
+        return Store.findByPk(req.params.StoreId);
+      })
+      .then((store) => {
+        res.render("products/index", {
+          products,
+          store,
+        });
       })
       .catch((err) => {
         res.send(err);
@@ -24,7 +36,16 @@ class ProductController {
   }
 
   static create(req, res) {
-    res.render("/products/create");
+    Category.findAll()
+      .then((categories) => {
+        res.render("products/create", {
+          categories,
+          StoreId: req.params.StoreId,
+        });
+      })
+      .catch((err) => {
+        res.send(err);
+      });
   }
 
   static show(req, res) {
@@ -48,10 +69,10 @@ class ProductController {
       description: req.body.description,
       stock: req.body.stock,
       CategoryId: req.body.CategoryId,
-      StoreId: req.body.StoreId,
+      StoreId: req.params.StoreId,
     })
       .then((product) => {
-        res.send(product);
+        res.redirect(`/products/${product.StoreId}/store`);
       })
       .catch((err) => {
         res.send(err);
@@ -59,24 +80,19 @@ class ProductController {
   }
 
   static edit(req, res) {
-    let stores = [];
     let categories = [];
-    Store.findAll()
-      .then((stores) => {
-        stores = stores;
-        return Category.findAll();
-      })
-      .then((categories) => {
-        categories = categories;
-        return Product.findByPk(req.params.id, {
-          include: [Category, Store],
+    Category.findAll()
+      .then((categoriesRes) => {
+        categories = categoriesRes;
+        return Product.findByPk(req.params.ProductId, {
+          include: [Category],
         });
       })
       .then((product) => {
-        res.render("/products/edit", {
+        res.render("products/edit", {
           product,
-          stores,
           categories,
+          StoreId: req.params.StoreId,
         });
       })
       .catch((err) => {
@@ -93,16 +109,15 @@ class ProductController {
         description: req.body.description,
         stock: req.body.stock,
         CategoryId: req.body.CategoryId,
-        StoreId: req.body.StoreId,
       },
       {
         where: {
-          id: req.params.id,
+          id: req.params.ProductId,
         },
       }
     )
       .then((product) => {
-        res.send(product);
+        res.redirect(`/products/${req.body.StoreId}/store`);
       })
       .catch((err) => {
         res.send(err);
@@ -110,13 +125,18 @@ class ProductController {
   }
 
   static destroy(req, res) {
-    Product.destroy({
-      where: {
-        id: req.params.id,
-      },
-    })
+    let StoreId = "";
+    Product.findByPk(req.params.ProductId)
       .then((product) => {
-        res.send(product);
+        StoreId = product.StoreId;
+        return Product.destroy({
+          where: {
+            id: req.params.ProductId,
+          },
+        });
+      })
+      .then(() => {
+        res.redirect(`/products/${StoreId}/store`);
       })
       .catch((err) => {
         res.send(err);
