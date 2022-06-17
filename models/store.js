@@ -25,12 +25,32 @@ module.exports = (sequelize, DataTypes) => {
     }
     Store.init(
         {
-            name: DataTypes.STRING,
-            contact: DataTypes.STRING,
-            address: DataTypes.STRING,
-            description: DataTypes.STRING,
-            imgUrl: DataTypes.STRING,
-            UserId: DataTypes.INTEGER,
+            name: {
+                type: DataTypes.STRING,
+                validate: { notEmpty: { msg: "name Must not be empty" } },
+            },
+            contact: {
+                type: DataTypes.STRING,
+                validate: { notEmpty: { msg: "contact Must not be empty" } },
+            },
+            address: {
+                type: DataTypes.STRING,
+                validate: { notEmpty: { msg: "address Must not be empty" } },
+            },
+            description: {
+                type: DataTypes.STRING,
+                validate: {
+                    notEmpty: { msg: "description Must not be empty" },
+                },
+            },
+            imgUrl: {
+                type: DataTypes.STRING,
+                validate: { notEmpty: { msg: "imgUrl Must not be empty" } },
+            },
+            UserId: {
+                type: DataTypes.INTEGER,
+                validate: { notEmpty: { msg: "UserId Must not be empty" } },
+            },
         },
         {
             sequelize,
