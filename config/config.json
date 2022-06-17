@@ -1,9 +1,9 @@
 {
-    "development": {
-        "username": "postgres",
-        "password": "root",
-        "database": "8commerce",
-        "host": "127.0.0.1",
+    "production": {
+        "username": "xtjeibckmzychr",
+        "password": "4d263f608bb408915a1bfc7fb11e9501d836de52c564badad9869578d5bc8b33",
+        "database": "d9sf1o96mt2vl3",
+        "host": "ec2-52-44-13-158.compute-1.amazonaws.com",
         "dialect": "postgres"
     }
 }
