@@ -21,7 +21,14 @@ module.exports = (sequelize, DataTypes) => {
             Product.belongsTo(models.Store, {
                 onDelete: "CASCADE",
             });
-            Product.belongsTo(models.Order);
+            Product.hasOne(models.Order);
+        }
+
+        get formattedPrice() {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            }).format(this.price);
         }
     }
     Product.init(

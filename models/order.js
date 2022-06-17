@@ -18,19 +18,33 @@ module.exports = (sequelize, DataTypes) => {
             //   onDelete: 'CASCADE'
             // });
             Order.belongsTo(models.User);
-            Order.hasOne(models.Product);
+            Order.belongsTo(models.Product);
         }
     }
     Order.init(
         {
-            ProductId: DataTypes.INTEGER,
-            UserId: DataTypes.INTEGER,
+            ProductId: {
+                type: DataTypes.INTEGER,
+                validate: { notEmpty: { msg: "ProductId Must not be Empty" } },
+            },
+            UserId: {
+                type: DataTypes.INTEGER,
+                validate: { notEmpty: { msg: "UserId Must not be Empty" } },
+            },
             isFinished: {
-                type: DataTypes.BOOLEAN,
+                type: {
+                    type: DataTypes.BOOLEAN,
+                    validate: {
+                        notEmpty: { msg: "isFinished Must not be Empty" },
+                    },
+                },
                 defaultValue: false,
             },
             status: {
-                type: DataTypes.STRING,
+                type: {
+                    type: DataTypes.STRING,
+                    validate: { notEmpty: { msg: "status Must not be Empty" } },
+                },
                 defaultValue: "On Process",
             },
         },
