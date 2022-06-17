@@ -73,7 +73,7 @@ class OrderController {
       .then((product) => {
         if (product.Store.UserId === +req.params.UserId) {
           res.redirect(
-            `/?error=You cannot order your own product! ${product.name}, please choose another product.`
+            `/?error=You cannot order your own product! ${product.name} please choose another product.`
           );
         } else {
           return Order.create({
@@ -96,7 +96,7 @@ class OrderController {
   static cancel(req, res) {
     Order.updateStatus(req.params.OrderId, "Cancelled")
       .then((order) => {
-        res.redirect(`/orders/${req.params.UserId}/user`);
+        res.redirect(`/orders/${req.session.currentUser.id}/user`);
       })
       .catch((err) => {
         res.send(err);
@@ -106,7 +106,7 @@ class OrderController {
   static delivery(req, res) {
     Order.updateStatus(req.params.OrderId, "Delivery")
       .then((order) => {
-        res.redirect(`/orders/${req.params.UserId}/seller`);
+        res.redirect(`/orders/${req.session.currentUser.id}/seller`);
       })
       .catch((err) => {
         res.send(err);
@@ -116,7 +116,7 @@ class OrderController {
   static complete(req, res) {
     Order.updateStatus(req.params.OrderId, "Completed")
       .then((order) => {
-        res.redirect(`/orders/${req.params.UserId}/user`);
+        res.redirect(`/orders/${req.session.currentUser.id}/user`);
       })
       .catch((err) => {
         res.send(err);
@@ -126,7 +126,7 @@ class OrderController {
   static destroy(req, res) {
     Order.destroy({
       where: {
-        id: req.params.OrderId,
+        id: +req.params.OrderId,
       },
     })
       .then((order) => {

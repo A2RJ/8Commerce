@@ -5,15 +5,22 @@ class ProductController {
   static index(req, res) {
     let params = {
       where: {
-        StoreId: req.params.StoreId,
+        StoreId: req.session.currentUser.Store.id,
       },
     };
 
     if (req.query.search) {
       params.where = {
-        name: {
-          [Op.iLike]: `%${req.query.search}%`,
-        },
+        [Op.and]: [
+          {
+            StoreId: req.session.currentUser.Store.id,
+          },
+          {
+            name: {
+              [Op.iLike]: `%${req.query.search}%`,
+            },
+          },
+        ],
       };
     }
 
@@ -45,6 +52,8 @@ class ProductController {
           categories,
           StoreId: req.params.StoreId,
           session: req.session,
+          errors:
+            req.query && req.query.errors ? req.query.errors.split(",") : [],
         });
       })
       .catch((err) => {
@@ -65,20 +74,15 @@ class ProductController {
   }
 
   static store(req, res) {
-    Product.create({
-      name: req.body.name,
-      price: req.body.price,
-      imgUrl: req.body.imgUrl,
-      description: req.body.description,
-      stock: req.body.stock,
-      CategoryId: req.body.CategoryId,
-      StoreId: req.params.StoreId,
-    })
+    Product.validator(req.body)
+      .then((validated) => {
+        return Product.create(validated);
+      })
       .then((product) => {
-        res.redirect(`/products/${product.StoreId}/store`);
+        res.redirect(`/products/${req.params.StoreId}`);
       })
       .catch((err) => {
-        res.send(err);
+        res.redirect(`/products/${req.params.StoreId}/create?errors=${err}`);
       });
   }
 
@@ -97,6 +101,8 @@ class ProductController {
           categories,
           StoreId: req.params.StoreId,
           session: req.session,
+          errors:
+            req.query && req.query.errors ? req.query.errors.split(",") : [],
         });
       })
       .catch((err) => {
@@ -105,42 +111,30 @@ class ProductController {
   }
 
   static update(req, res) {
-    Product.update(
-      {
-        name: req.body.name,
-        price: req.body.price,
-        imgUrl: req.body.imgUrl,
-        description: req.body.description,
-        stock: req.body.stock,
-        CategoryId: req.body.CategoryId,
-      },
-      {
-        where: {
-          id: req.params.ProductId,
-        },
-      }
-    )
-      .then((product) => {
-        res.redirect(`/products/${req.body.StoreId}/store`);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  }
-
-  static destroy(req, res) {
-    let StoreId = "";
-    Product.findByPk(req.params.ProductId)
-      .then((product) => {
-        StoreId = product.StoreId;
-        return Product.destroy({
+    Product.validator(req.body)
+      .then((validated) => {
+        return Product.update(validated, {
           where: {
             id: req.params.ProductId,
           },
         });
       })
       .then(() => {
-        res.redirect(`/products/${StoreId}/store`);
+        res.redirect(`/products/${req.body.StoreId}`);
+      })
+      .catch((err) => {
+        res.redirect(`/products/${req.body.StoreId}/edit?errors=${err}`);
+      });
+  }
+
+  static destroy(req, res) {
+    Product.destroy({
+      where: {
+        id: req.params.ProductId,
+      },
+    })
+      .then(() => {
+        res.redirect(`/products/${req.session.currentUser.Store.id}`);
       })
       .catch((err) => {
         res.send(err);

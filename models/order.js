@@ -24,6 +24,31 @@ module.exports = (sequelize, DataTypes) => {
     static updateStatus(id, status) {
       return Order.update({ status: status }, { where: { id: id } });
     }
+
+    get createdAtFormatted() {
+      return this.createdAt.toLocaleString();
+    }
+
+    static validator(order) {
+      return new Promise((resolve, reject) => {
+        const errors = [];
+        if (!order.UserId) {
+          errors.push("User is required");
+        }
+        if (!order.ProductId) {
+          errors.push("Product is required");
+        }
+
+        if (order.length > 0) {
+          reject(errors);
+        } else {
+          resolve({
+            ProductId: order.ProductId,
+            UserId: order.UserId,
+          });
+        }
+      });
+    }
   }
   Order.init(
     {

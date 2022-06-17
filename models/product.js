@@ -32,6 +32,44 @@ module.exports = (sequelize, DataTypes) => {
         minimumFractionDigits: 0,
       }).format(this.price);
     }
+
+    static validator(product) {
+      return new Promise((resolve, reject) => {
+        const errors = [];
+        if (!product.name) {
+          errors.push("Name is required");
+        }
+        if (!product.price) {
+          errors.push("Price is required");
+        }
+        if (!product.imgUrl) {
+          errors.push("Image URL is required");
+        }
+        if (!product.description) {
+          errors.push("Description is required");
+        }
+        if (!product.stock) {
+          errors.push("Stock is required");
+        }
+        if (!product.CategoryId) {
+          errors.push("Category is required");
+        }
+
+        if (errors.length > 0) {
+          reject(errors);
+        } else {
+          resolve({
+            name: product.name,
+            price: product.price,
+            imgUrl: product.imgUrl,
+            description: product.description,
+            stock: product.stock,
+            CategoryId: product.CategoryId,
+            StoreId: product.StoreId,
+          });
+        }
+      });
+    }
   }
   Product.init(
     {

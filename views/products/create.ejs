@@ -4,9 +4,19 @@
     <h1 class="text-center mt-2">
         Add product
     </h1>
+    <div class="text-left">
+        <% if (errors.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+            <% for (err of errors) { %>
+            <%= err %> <br>
+            <% } %>
+        </div>
+        <% } %>
+    </div>
     <div class="row">
         <div class="col-md-12 mt-2">
             <form action="/products/<%= StoreId %>/store" method="post">
+                <input type="hidden" name="StoreId" id="StoreId" value="<%= StoreId %>">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Name">
