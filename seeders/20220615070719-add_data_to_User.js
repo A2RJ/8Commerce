@@ -1,5 +1,5 @@
 "use strict";
-
+const bcrypt = require("bcryptjs");
 module.exports = {
     async up(queryInterface, Sequelize) {
         /**
@@ -14,6 +14,8 @@ module.exports = {
         const data = require("../data/Users.json").map((elem) => {
             elem.createdAt = new Date();
             elem.updatedAt = new Date();
+            const salt = bcrypt.genSaltSync(8);
+            elem.password = bcrypt.hashSync(elem.password, salt);
             return elem;
         });
         await queryInterface.bulkInsert(

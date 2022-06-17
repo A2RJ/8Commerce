@@ -2,6 +2,6 @@ const express = require("express");
 const MainController = require("../controllers/MainController");
 const MainRoutes = express.Router();
 
-MainRoutes.get("/", MainController.index);
+MainRoutes.get("/", MainController.getAllProducts);
 
 module.exports = MainRoutes;
