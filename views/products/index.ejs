@@ -1,18 +1,21 @@
+<%- include('../component/navbar', {session: session}); %>
 <% extend('../layout/index.ejs') %>
 
 <div class="container">
-    <div class="row mt-5 mb-2">
+    <div class="row mt-2 mb-2">
         <div class="col-md-12">
             <h1>Store name: <%= store.name %></h1>
-            <p>Products</p>
+            <a href="/stores/edit">Edit Your Store</a>
+            <p>Total products <%= products.length %></p>
+            <p>Owner name: <%= store.User.name %></p>
+            <a href="/orders/<%= store.UserId %>/user">My Order</a> <br>
+            <a href="/orders/<%= store.UserId %>/seller">Buyer Order</a> <br>
             <a href="/products/<%= store.id %>/create">
-                <button class="btn btn-primary">Create</button>
+                <button class="btn btn-primary">Add new product</button>
             </a>
-            <a href="/orders/<%= store.UserId %>/user"> Keranjang</a>
-            <a href="/orders/<%= store.UserId %>/seller"> List Orderan</a>
         </div>
         <div class="col-md-12 mt-2">
-            <form action="/products/<%= store.id %>/store" method="get">
+            <form action="/products/<%= store.id %>" method="get">
                 <input type="text" class="form-control" id="search" name="search" placeholder="Search">
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="/products/<%= store.id %>/create">
@@ -40,8 +43,7 @@
                 <td><%= product.stock %></td>
                 <td>
                     <a href="/products/<%= product.id %>/edit" class="btn btn-primary">Edit</a>
-                    <a href="/products/<%= product.id %>/delete" class="btn btn-danger">Delete</a>
-                    <a href="/orders/<%= product.id %>/2/order" class="btn btn-info">Order</a>
+                    <a href="/products/<%= product.id %>/delete" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
             </tr>
             <% }) %>

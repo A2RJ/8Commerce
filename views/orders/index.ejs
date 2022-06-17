@@ -1,4 +1,5 @@
 <% extend('../layout/index.ejs') %>
+<%- include('../component/navbar', {session: session}); %>
 
 <div class="container">
     <div class="row">
@@ -17,6 +18,7 @@
                     <tr>
                         <th>#</th>
                         <th>Product</th>
+                        <th>receiver</th>
                         <th>Price</th>
                         <th>Status</th>
                         <th>Di Order</th>
@@ -28,6 +30,7 @@
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><%= order.Product.name %></td>
+                        <td><%= order.User.name %></td>
                         <td><%= order.Product.price %></td>
                         <td><%= order.status %></td>
                         <td><%= order.createdAtFormatted %></td>
@@ -42,8 +45,9 @@
 
                             <% } else { %>
 
+                            <a href="/orders/<%= order.UserId %>/destroy" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
                             <% if (order.status === 'On Process') { %>
-                            <a href="/orders/<%= order.id %>/cancel" class="btn btn-danger">Cancel</a>
+                            <a href="/orders/<%= order.id %>/cancel" class="btn btn-warning">Cancel</a>
                             <% } else if (order.status === 'Delivery') { %>
                             <a href="/orders/<%= order.id %>/complete" class="btn btn-primary">Complete</a>
                             <% } else { %>

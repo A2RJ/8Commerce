@@ -7,7 +7,11 @@ class OrderController {
       include: [User, Product],
     })
       .then((orders) => {
-        res.render("orders/index", { orders, isSeller: false });
+        res.render("orders/index", {
+          orders,
+          isSeller: false,
+          session: req.session,
+        });
       })
       .catch((err) => {
         res.send(err);
@@ -22,7 +26,11 @@ class OrderController {
       include: [User, Product],
     })
       .then((orders) => {
-        res.render("orders/index", { orders, isSeller: false });
+        res.render("orders/index", {
+          orders,
+          isSeller: false,
+          session: req.session,
+        });
       })
       .catch((err) => {
         res.send(err);
@@ -47,7 +55,11 @@ class OrderController {
         });
       })
       .then((orders) => {
-        res.render("orders/index", { orders, isSeller: true });
+        res.render("orders/index", {
+          orders,
+          isSeller: true,
+          session: req.session,
+        });
       })
       .catch((err) => {
         res.send(err);
@@ -55,12 +67,26 @@ class OrderController {
   }
 
   static order(req, res) {
-    Order.create({
-      UserId: req.params.UserId,
-      ProductId: req.params.ProductId,
+    Product.findByPk(req.params.ProductId, {
+      include: [Store],
     })
-      .then((order) => {
-        res.redirect(`/orders/${req.params.UserId}/user`);
+      .then((product) => {
+        if (product.Store.UserId === +req.params.UserId) {
+          res.redirect(
+            `/?error=You cannot order your own product! ${product.name}, please choose another product.`
+          );
+        } else {
+          return Order.create({
+            UserId: req.params.UserId,
+            ProductId: req.params.ProductId,
+          })
+            .then((order) => {
+              res.redirect(`/orders/${req.params.UserId}/user`);
+            })
+            .catch((err) => {
+              res.send(err);
+            });
+        }
       })
       .catch((err) => {
         res.send(err);
@@ -91,6 +117,20 @@ class OrderController {
     Order.updateStatus(req.params.OrderId, "Completed")
       .then((order) => {
         res.redirect(`/orders/${req.params.UserId}/user`);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  }
+
+  static destroy(req, res) {
+    Order.destroy({
+      where: {
+        id: req.params.OrderId,
+      },
+    })
+      .then((order) => {
+        res.redirect(`/orders/${req.session.currentUser.id}/user`);
       })
       .catch((err) => {
         res.send(err);

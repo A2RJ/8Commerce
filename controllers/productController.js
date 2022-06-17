@@ -1,4 +1,4 @@
-const { Product, Category, Store } = require("../models");
+const { Product, Category, Store, User } = require("../models");
 const { Op } = require("sequelize");
 
 class ProductController {
@@ -22,12 +22,15 @@ class ProductController {
     Product.findAll(params)
       .then((productsList) => {
         products = productsList;
-        return Store.findByPk(req.params.StoreId);
+        return Store.findByPk(req.params.StoreId, {
+          include: [User],
+        });
       })
       .then((store) => {
         res.render("products/index", {
           products,
           store,
+          session: req.session,
         });
       })
       .catch((err) => {
@@ -41,6 +44,7 @@ class ProductController {
         res.render("products/create", {
           categories,
           StoreId: req.params.StoreId,
+          session: req.session,
         });
       })
       .catch((err) => {
@@ -53,7 +57,6 @@ class ProductController {
       include: [Category, Store],
     })
       .then((product) => {
-        // res.render("/products/show");
         res.send(product);
       })
       .catch((err) => {
@@ -93,6 +96,7 @@ class ProductController {
           product,
           categories,
           StoreId: req.params.StoreId,
+          session: req.session,
         });
       })
       .catch((err) => {
