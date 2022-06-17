@@ -27,11 +27,6 @@ module.exports = {
      */
     await queryInterface.changeColumn("Stores", "UserId", {
       type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Users",
-        key: "id",
-      },
     });
   },
 };

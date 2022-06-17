@@ -38,6 +38,7 @@ class UserController {
                             name: user.name,
                             email: user.email,
                             hasStore: user.Store ? true : false,
+                            Store: user.Store,
                         };
 
                         res.redirect("/");
